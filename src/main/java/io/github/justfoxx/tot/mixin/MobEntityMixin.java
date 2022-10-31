@@ -1,6 +1,8 @@
 package io.github.justfoxx.tot.mixin;
 
 import io.github.justfoxx.tot.Items;
+import io.github.justfoxx.tot.PreMain;
+import io.github.justfoxx.tot.config.ModConfigs;
 import io.github.justfoxx.tot.items.TotItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
@@ -34,8 +36,8 @@ public class MobEntityMixin {
     public void onDeath(DamageSource damageSource, CallbackInfo ci) {
         if(!((Object)this instanceof MobEntity)) return;
         if(!(damageSource.getAttacker() instanceof PlayerEntity player)) return;
-        int rndInt = random.nextBetween(1, 3);
-        if(rndInt == 1) {
+        int rndInt = random.nextBetween(1, 100);
+        if(rndInt <= PreMain.CONFIG.CHANCE) {
             player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
             player.giveItemStack(new ItemStack(Items.TOT_ITEM));
         }

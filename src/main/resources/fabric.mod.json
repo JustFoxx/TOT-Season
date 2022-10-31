@@ -27,7 +27,7 @@
   "mixins": [
     "tot.mixins.json"
   ],
-
+  "icon": "assets/tot/icon.png",
   "depends": {
     "fabricloader": ">=0.14.10",
     "fabric-api": "*",

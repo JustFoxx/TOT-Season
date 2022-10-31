@@ -1,6 +1,10 @@
 package io.github.justfoxx.tot.items;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.datafixers.optics.Adapter;
+import io.github.justfoxx.tot.Global;
+import io.github.justfoxx.tot.PreMain;
+import io.github.justfoxx.tot.config.ModConfigs;
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.command.argument.BlockPosArgumentType;
@@ -18,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
@@ -59,19 +64,17 @@ public class TotItem extends Item {
     }
 
     private void randomMethod(ServerWorld world, ServerPlayerEntity player){
-        int randomInt = random.nextBetween(1,10);
-        switch (randomInt) {
-            case 1 -> player.sendMessageToClient(Text.literal("Funni xp"), false);
-            case 2 -> player.giveItemStack(new ItemStack(Items.DIAMOND));
-            case 3 -> player.giveItemStack(new ItemStack(Items.COARSE_DIRT));
-            case 4 -> player.giveItemStack(new ItemStack(Items.COOKIE, 5));
-            case 5 -> FabricDimensions.teleport(player, world, new TeleportTarget(new Vec3d(player.getX(), player.getY()+10, player.getZ()), player.getVelocity(), player.getYaw(), player.getPitch()));
-            case 6 -> player.giveItemStack(new ItemStack(Items.WOODEN_SWORD));
-            case 7 -> player.addStatusEffect(new StatusEffectInstance(StatusEffects.LUCK, 100, 1));
-            case 8 -> summonHelper("minecraft:zombie", world, player.getPos(), null);
-            case 9 -> summonHelper("minecraft:creeper", world, player.getPos(), null);
-            case 10 -> player.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 100, 1));
-        }
+        if(PreMain.CONFIG.PRIZES.size() < 1) return;
+        int randomInt = random.nextBetween(1,ModConfigs.PRIZES.size()-1);
+        String prize = PreMain.CONFIG.PRIZES.get(randomInt);
+        executeCommand(prize, player.getServer(), player);
+    }
+
+    private void executeCommand(String cmd, MinecraftServer server, ServerPlayerEntity player){
+        String command = String.format("execute positioned %d %d %d as @p run %s",player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ(), cmd);
+        Global.logger.info(command);
+        server.getCommandManager().executeWithPrefix(server.getCommandSource(), command);
+
     }
 
     @Override

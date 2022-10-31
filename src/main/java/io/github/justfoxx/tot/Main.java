@@ -1,5 +1,6 @@
 package io.github.justfoxx.tot;
 
+import com.terraformersmc.modmenu.ModMenu;
 import net.fabricmc.api.ModInitializer;
 
 public class Main implements ModInitializer {
