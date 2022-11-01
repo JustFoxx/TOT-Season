@@ -12,7 +12,12 @@ public class PreMain implements PreLaunchEntrypoint {
         try {
             CONFIG = ModConfigs.readConfig();
         } catch (IOException ignored) {
-
+            CONFIG = new ModConfigs();
+            try {
+                ModConfigs.writeConfig(CONFIG);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         Global.logger.info("Made by JustFoxx");
         Global.logger.info("Thanks for installing our mod!");

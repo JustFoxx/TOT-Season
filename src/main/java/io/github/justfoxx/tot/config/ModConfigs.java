@@ -2,19 +2,16 @@ package io.github.justfoxx.tot.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mojang.datafixers.util.Pair;
-import io.github.justfoxx.tot.Global;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ModConfigs {
-    public static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    public static int CHANCE = 25;
-    public static List<String> PRIZES = List.of(
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    public final int chance = 25;
+    public final List<String> prizes = List.of(
             "tellraw @s {\"text\":\"Funni xp\"}",
             "give @s diamond",
             "give @s coarse_dirt",
@@ -26,7 +23,7 @@ public class ModConfigs {
             "summon creeper",
             "effect give @s darkness 20 1"
     );
-    //public static List<String> BLACK_LIST = new ArrayList<>();
+    public final List<String> blocklist = List.of("minecraft:arrow");
 
     public static void writeConfig(ModConfigs config) throws IOException {
         var path = FabricLoader.getInstance().getConfigDir().resolve("totconfig.json");
