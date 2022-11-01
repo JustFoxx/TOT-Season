@@ -34,6 +34,9 @@ public class TotItem extends Item {
             randomMethod((ServerPlayerEntity) user);
             serverWorld.spawnParticles(ParticleTypes.WITCH, user.getX(), user.getY() + 1.0D, user.getZ(), 10, 0.1D, 0.1D, 0.1D, 0.1D);
         }
+        if(!user.isCreative()) {
+            user.getStackInHand(hand).decrement(1);
+        }
         return TypedActionResult.consume(user.getStackInHand(hand));
     }
 }
