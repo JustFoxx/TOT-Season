@@ -1,5 +1,6 @@
 package io.github.justfoxx.tot.items;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.justfoxx.tot.PreMain;
 import io.github.justfoxx.tot.Util;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -20,9 +21,9 @@ public class TotItem extends Item {
         super(new FabricItemSettings().maxCount(12).group(ItemGroup.MISC));
     }
 
-    private void randomMethod(ServerPlayerEntity player){
+    private void randomMethod(ServerPlayerEntity player) throws CommandSyntaxException {
         if(PreMain.CONFIG.prizes.size() < 1) return;
-        int randomInt = Util.random.nextBetween(1,PreMain.CONFIG.prizes.size());
+        int randomInt = Util.random.nextInt(PreMain.CONFIG.prizes.size()-1) + 1;;
         String prize = PreMain.CONFIG.prizes.get(randomInt-1);
         Util.executeCommand(prize, player.getServer(), player);
     }
@@ -31,7 +32,11 @@ public class TotItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         user.playSound(SoundEvents.ENTITY_WITHER_SKELETON_DEATH, 1.0F, 1.0F);
         if(world instanceof ServerWorld serverWorld) {
-            randomMethod((ServerPlayerEntity) user);
+            try {
+                randomMethod((ServerPlayerEntity) user);
+            } catch (CommandSyntaxException e) {
+                throw new RuntimeException(e);
+            }
             serverWorld.spawnParticles(ParticleTypes.WITCH, user.getX(), user.getY() + 1.0D, user.getZ(), 10, 0.1D, 0.1D, 0.1D, 0.1D);
         }
         if(!user.isCreative()) {

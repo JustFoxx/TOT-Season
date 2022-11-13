@@ -13,17 +13,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Mixin(LivingEntity.class)
 public abstract class MobEntityMixin {
-    public final Random random = Random.create();
+    public final Random random = new Random();
+    public final int low = 1;
+    public final int high = 100;
     public final AtomicBoolean is = new AtomicBoolean(false);
     @Inject(at = @At("RETURN"), method = "onDeath")
     public void onDeath(DamageSource damageSource, CallbackInfo ci) {
@@ -34,7 +36,7 @@ public abstract class MobEntityMixin {
                 id -> is.set(Util.checkEntity((Entity) (Object) this, Util.getEntityType(id)))
         );
         if(is.get()) return;
-        int rndInt = random.nextBetween(1, 100);
+        int rndInt = random.nextInt(high-low) + low;
         if(rndInt <= PreMain.CONFIG.chance) {
             player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 2.0F, 2.0F);
             ItemEntity item = entity.dropStack(new ItemStack(Items.TOT_ITEM));
