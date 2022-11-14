@@ -10,8 +10,8 @@ import java.util.List;
 
 public class ModConfigs {
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    public final int chance = 25;
-    public final List<String> prizes = List.of(
+    public int chance = 25;
+    public List<String> prizes = List.of(
             "tellraw @s {\"text\":\"Funni xp\"}",
             "give @s diamond",
             "give @s coarse_dirt",
@@ -23,7 +23,7 @@ public class ModConfigs {
             "summon creeper",
             "effect give @s darkness 20 1"
     );
-    public final List<String> blocklist = List.of("minecraft:arrow");
+    public List<String> blocklist = List.of("minecraft:arrow");
 
     public static void writeConfig(ModConfigs config) throws IOException {
         var path = FabricLoader.getInstance().getConfigDir().resolve("totconfig.json");
