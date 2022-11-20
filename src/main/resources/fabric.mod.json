@@ -32,7 +32,8 @@
     "fabricloader": ">=0.14.10",
     "fabric": "*",
     "minecraft": "~1.19",
-    "java": ">=17"
+    "java": ">=17",
+    "ivycore": "*"
   },
   "suggests": {
     "another-mod": "*"

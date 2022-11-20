@@ -4,7 +4,10 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.command.CommandOutput;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.GameRules;
@@ -15,9 +18,10 @@ import java.util.Random;
 public class Util {
     public static void executeCommand(String cmd, MinecraftServer server, ServerPlayerEntity player) throws CommandSyntaxException {
         var rule = server.getGameRules().get(GameRules.SEND_COMMAND_FEEDBACK);
-        String command = String.format("execute positioned %d %d %d as @p run %s",player.getBlockPos().getX(), player.getBlockPos().getY(), player.getBlockPos().getZ(), cmd);
+        String command = String.format("execute as @p run %s",cmd);
         rule.set(false, server);
-        server.getCommandManager().getDispatcher().execute(command, server.getCommandSource());
+        var commandSource = new ServerCommandSource(CommandOutput.DUMMY,player.getPos(),player.getRotationClient(), player.getWorld(),4,"", Text.of("Server"), server,player);
+        server.getCommandManager().executeWithPrefix(commandSource, command);
         rule.set(true, server);
     }
     public static final Random random = new Random();
@@ -29,5 +33,9 @@ public class Util {
 
     public static EntityType<?> getEntityType(String name) {
         return Registry.ENTITY_TYPE.get(Identifier.tryParse(name));
+    }
+
+    public static boolean reverse(boolean original, boolean reverse) {
+        return reverse != original;
     }
 }
