@@ -1,7 +1,7 @@
 package io.github.justfoxx.tot.mixin;
 
+import io.github.justfoxx.tot.Configs;
 import io.github.justfoxx.tot.Items;
-import io.github.justfoxx.tot.PreMain;
 import io.github.justfoxx.tot.Util;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
@@ -32,12 +32,12 @@ public abstract class MobEntityMixin {
         if(!((Object)this instanceof MobEntity entity)) return;
         if(!(entity.getWorld() instanceof ServerWorld world)) return;
         if(!(damageSource.getAttacker() instanceof PlayerEntity player)) return;
-        PreMain.CONFIG.blocklist.forEach(
+        Configs.totItemConfig.data.entityblocklist.forEach(
                 id -> is.set(Util.checkEntity((Entity) (Object) this, Util.getEntityType(id)))
         );
-        if(is.get()) return;
+        if(Util.reverse(is.get(), Configs.totItemConfig.data.whitelist)) return;
         int rndInt = random.nextInt(high-low) + low;
-        if(rndInt <= PreMain.CONFIG.chance) {
+        if(rndInt <= Configs.totItemConfig.data.chance) {
             player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 2.0F, 2.0F);
             ItemEntity item = entity.dropStack(new ItemStack(Items.TOT_ITEM));
             world.spawnParticles(ParticleTypes.HAPPY_VILLAGER, item.getX(), item.getY(), item.getZ(), 10, 0.1, 0.1, 0.1, 0.1);

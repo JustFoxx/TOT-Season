@@ -1,7 +1,7 @@
 package io.github.justfoxx.tot.items;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.github.justfoxx.tot.PreMain;
+import io.github.justfoxx.tot.Configs;
 import io.github.justfoxx.tot.Util;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,9 +22,10 @@ public class TotItem extends Item {
     }
 
     private void randomMethod(ServerPlayerEntity player) throws CommandSyntaxException {
-        if(PreMain.CONFIG.prizes.size() < 1) return;
-        int randomInt = Util.random.nextInt(PreMain.CONFIG.prizes.size()-1) + 1;;
-        String prize = PreMain.CONFIG.prizes.get(randomInt-1);
+        var data = Configs.totItemConfig.data;
+        if(data.prizes.size() < 1) return;
+        int randomInt = Util.random.nextInt(data.prizes.size()-1) + 1;;
+        String prize = data.prizes.get(randomInt-1);
         Util.executeCommand(prize, player.getServer(), player);
     }
 
